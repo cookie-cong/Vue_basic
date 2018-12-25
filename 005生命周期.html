@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p ref="box">{{message}}</p>
+        <button @click="handleUp">更新</button>
+    </div>
+    <button onclick= "handleDes()">销毁</button>
+</body>
+</html>
+<script src="vue.js"></script>
+<script>
+var vm = new Vue({
+    el:"#app",
+    data:{
+        message:"蜡笔小柯南"
+    },
+    methods:{
+        handleUp(){
+            this.message="柯南"
+        }
+    },
+    beforeCreate() {
+        //创建前 实例初始化的时候执行，常用来做初始化作用，一般会这个函数里进行动画loading加载
+        console.log("beforeCreate------")
+    },
+    created(){
+        //创建后 在created生命周期函数里，把data和methods里的方法和属性都遍历挂在到了vue实例上，并且把所有data属性都添加
+        //了getter和setter方法
+        console.log("created----")
+       
+    },
+    beforeMount(){
+        // 挂载前 此时的生命周期函数内数据和模板还未结合将要结合，因此模板里的dom结构还是虚拟dom结构
+        //不能获取真实dom
+        console.log("beforeMount----")
+        console.log(document.getElementById("app").innerHTML)
+    },
+    mounted(){
+        // 挂载后 数据和模板相结合，生成真实的dom结构
+        console.log("mounted----")
+        console.log(document.getElementById("app").innerHTML)
+        console.log(this.$refs.box)//获取真实dom结构 
+    },
+    beforeUpdate() {
+        //更新前 data里的数据改变时就执行这个函数，可以在这里面进行最终的一次修改，但是此时的dom结构
+        //不是最新的dom结构
+        // console.log(this.$refs.box)
+        console.log(app.innerHTML)
+        this.message="小新"
+        console.log("beforeUpdate---")
+        
+    },
+    updated() {
+        //更新后，最终的数据和模板结合，生成一个最终的dom结构，在这个声明周期里可以获取到最新的
+        //dom结构
+        console.log("updated---")
+        // console.log(this.$refs.box)
+        console.log(app.innerHTML)
+    },
+    beforeDestroy() {
+        //被销毁前 还可以访问到数据以及真实的dom结构，可以进行事件解绑和移除监听
+        console.log("beforeDestory----")
+        console.log(this.message);
+        console.log(this.$refs.box)
+    },
+    destroyed(){
+        //销毁之后，vm和真实dom断了关联，但是还是可以访问当数据，但是访问不到真实dom结构
+
+        console.log("destoryed----")
+        console.log(this.message)
+        console.log(this.$refs.box)
+    }
+})
+console.log(vm)
+function handleDes(){
+    vm.$destroy()
+}
+</script>
